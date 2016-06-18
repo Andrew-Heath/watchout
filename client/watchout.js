@@ -8,13 +8,25 @@ var collisionFlag = false;
 
 var updateScores = function(scores) {
   var scoreBoard = d3.select('.scoreboard')
-                              .select('.collisions')
-                              .select('span')
-                              .data(scores);
+                     .data(scores);
 
-  scoreBoard.text(function(d) { 
-    return d.collisions;
-  });
+  scoreBoard.select('.collisions')
+            .select('span')
+            .text(function(d) { 
+              return d.collisions;
+            });
+
+  scoreBoard.select('.current')
+            .select('span')
+            .text(function(d) { 
+              return d.currentscore;
+            });
+
+  scoreBoard.select('.highscore')
+            .select('span')
+            .text(function(d) { 
+              return d.highscore;
+            });
 };
 
 
@@ -191,9 +203,25 @@ addPlayersToBoard(playerArray);
 // Make enemies move every second
 setInterval(function() {
   moveEnemies(enemyArray);
+  // scores[0].currentscore++;
+
+  // if (scores[0].currentscore > scores[0].highscore) {
+  //   scores[0].highscore = scores[0].currentscore;
+  // }
+
   if (collisionFlag === true) {
     collisionFlag = false;
     scores[0].collisions++;
+    scores[0].currentscore = 0;
   }
   updateScores(scores);
 }, 1000);
+
+setInterval(function() {
+  scores[0].currentscore++;
+
+  if (scores[0].currentscore > scores[0].highscore) {
+    scores[0].highscore = scores[0].currentscore;
+  }
+  updateScores(scores);
+}, 100);
