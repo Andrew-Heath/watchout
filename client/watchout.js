@@ -154,8 +154,24 @@ var addPlayersToBoard = function(playerArray) {
     d.cx += d3.event.dx;
     d.cy += d3.event.dy;
     d3.select(this)
-    .attr('cx', function(d) { return d.cx; })
-    .attr('cy', function(d) { return d.cy; });
+    .attr('cx', function(d) { 
+      var coord = d.cx;
+      if (coord < 25) {
+        coord = 25;
+      } else if (coord > 725) {
+        coord = 725;
+      }
+      return coord;
+    })
+    .attr('cy', function(d) {
+      var coord = d.cy;
+      if (coord < 25) {
+        coord = 25;
+      } else if (coord > 725) {
+        coord = 725;
+      }
+      return coord;
+    });
   });
 
   drag.on('dragstart', function() {
@@ -176,10 +192,6 @@ var addPlayersToBoard = function(playerArray) {
           .attr('fill', 'url(#alderaanPattern)')
           .call(drag);
 
-  // players.on('click', function() {
-  //   console.log('you just dragged me :(');
-  // });
-
   // EXIT
   // remove excess enemies
   players.exit().remove();
@@ -189,7 +201,6 @@ var addPlayersToBoard = function(playerArray) {
 // COLLISION CODE
 
 var collision = function(thisCircle, otherCircle) {
-  // console.log('Collision at: ' + thisCircle.attr('cx') + ',' + thisCircle.attr('cy'));
   collisionFlag = true;
 };
 
@@ -222,11 +233,6 @@ addPlayersToBoard(playerArray);
 // Make enemies move every second
 setInterval(function() {
   moveEnemies(enemyArray);
-  // scores[0].currentscore++;
-
-  // if (scores[0].currentscore > scores[0].highscore) {
-  //   scores[0].highscore = scores[0].currentscore;
-  // }
 
   if (collisionFlag === true) {
     collisionFlag = false;
