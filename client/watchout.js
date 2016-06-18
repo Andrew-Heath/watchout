@@ -1,27 +1,32 @@
 // start slingin' some d3 here.
 var numberOfEnemies = 10;
 
-var generateCircle = function() {
+
+//Circle class for all objects
+var Circle = function() {
 
   var circle = {};
   circle.radius = 25;
-  // circle.cx = randomCoordinate();
-  // circle.cy = randomCoordinate();
 
   circle.randomCoordinate = function () {
     return (Math.floor(Math.random() * (750 - circle.radius * 2)) + circle.radius);
   };
 
+  // circle.cx = circle.randomCoordinate();
+  // circle.cy = circle.randomCoordinate();  
+
   return circle;
 };
 
+
+//Creating all enemies
 var enemyArray = [];
 for (var i = 0; i <= numberOfEnemies; i++) {
-  enemyArray.push(generateCircle());
+  enemyArray.push(Circle());
 }
 
 var playerArray = [];
-playerArray.push(generateCircle());
+playerArray.push(Circle());
 
 var gameBoard = d3.select('body')
                   .append('svg')
@@ -29,6 +34,30 @@ var gameBoard = d3.select('body')
                   .style('background-color', 'black')
                   .style('height', '750px')
                   .style('width', '750px');
+
+// Add pattern to gameBoard to house images
+gameBoard.append('defs').append('pattern')
+          .attr('id', 'deathStarPattern')
+          .attr('width', 50)
+          .attr('height', 50)
+          .append('image')
+          .attr('x', 0)
+          .attr('y', 0)
+          .attr('width', 50)
+          .attr('height', 50)
+          .attr('xlink:href', 'deathstar.png');
+
+gameBoard.append('defs').append('pattern')
+          .attr('id', 'alderaanPattern')
+          .attr('width', 50)
+          .attr('height', 50)
+          .append('image')
+          .attr('x', 0)
+          .attr('y', 0)
+          .attr('width', 50)
+          .attr('height', 50)
+          .attr('xlink:href', 'alderaan.png');
+
 
 var moveEnemies = function(enemyArray) {
 
@@ -48,8 +77,9 @@ var moveEnemies = function(enemyArray) {
           .attr('cx', function(d) { return d.randomCoordinate(); })
           .attr('cy', function(d) { return d.randomCoordinate(); })
           .attr('r', function(d) { return d.radius; })
-          .classed({'enemy': true})
-          .style('fill', 'white');
+          .attr('fill', 'url(#deathStarPattern)')
+          .classed({'enemy': true});
+          // .style('fill', 'white');
 
   // EXIT
   // remove excess enemies
@@ -67,12 +97,14 @@ var addPlayersToBoard = function(playerArray) {
     return d;
   });
 
+  var px = 0;
+  var py = 0;
+
   drag.on('drag', function(d, i) {
-    d.cx += d3.event.dx;
-    d.cy += d3.event.dy;
+    px += d3.event.dx;
+    py += d3.event.dy;
     d3.select(this).attr('transform', function(d, i) {
-      console.log("d.cx", d.cx);
-      return 'translate(' + [5, 5] + ')';
+      return 'translate(' + [px, py] + ')';
     });
   });
 
@@ -91,8 +123,8 @@ var addPlayersToBoard = function(playerArray) {
           .attr('cy', function(d) { return d.randomCoordinate(); })
           .attr('r', function(d) { return d.radius; })
           .classed({'player': true})
-          .style('fill', 'red')
-          //.attr('transform', 'translate(' + cx + ',' + cy + ')')
+          .attr('fill', 'url(#alderaanPattern)')
+          .attr('transform', 'translate(' + px + ',' + py + ')')
           .call(drag);
 
   // players.on('click', function() {
