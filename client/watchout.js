@@ -1,5 +1,22 @@
 // start slingin' some d3 here.
-var numberOfEnemies = 10;
+
+//SCOREBOARD CODE
+
+var scores = [{'highscore': 0, 'currentscore': 0, 'collisions': 0}];
+
+var collisionFlag = false;
+
+var updateScores = function(scores) {
+  var scoreBoard = d3.select('.scoreboard')
+                              .select('.collisions')
+                              .select('span')
+                              .data(scores);
+
+  scoreBoard.text(function(d) { 
+    return d.collisions;
+  });
+};
+
 
 
 //Circle class for all objects
@@ -18,7 +35,7 @@ var Circle = function() {
   return circle;
 };
 
-
+var numberOfEnemies = 10;
 //Creating all enemies
 var enemyArray = [];
 for (var i = 0; i <= numberOfEnemies; i++) {
@@ -141,7 +158,8 @@ var addPlayersToBoard = function(playerArray) {
 // COLLISION CODE
 
 var collision = function(thisCircle, otherCircle) {
-  console.log('Collision at: ' + thisCircle.attr('cx') + ',' + thisCircle.attr('cy'));
+  // console.log('Collision at: ' + thisCircle.attr('cx') + ',' + thisCircle.attr('cy'));
+  collisionFlag = true;
 };
 
 var collisionDetection = function() {  
@@ -173,4 +191,9 @@ addPlayersToBoard(playerArray);
 // Make enemies move every second
 setInterval(function() {
   moveEnemies(enemyArray);
+  if (collisionFlag === true) {
+    collisionFlag = false;
+    scores[0].collisions++;
+  }
+  updateScores(scores);
 }, 1000);
