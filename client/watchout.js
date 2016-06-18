@@ -69,7 +69,8 @@ var moveEnemies = function(enemyArray) {
   enemies.transition()
             .duration(1000)
             .attr('cx', function(d) { return d.randomCoordinate(); })
-            .attr('cy', function(d) { return d.randomCoordinate(); });
+            .attr('cy', function(d) { return d.randomCoordinate(); })
+            .tween('collision', console.log('collided'));
 
   // ENTER
   // create new enemies if they don't exist, and assign them random coordinate
@@ -119,6 +120,7 @@ var addPlayersToBoard = function(playerArray) {
   // ENTER
   // create new enemies if they don't exist, and assign them random coordinate
   players.enter().append('circle')
+  
           .attr('cx', function(d) { return d.randomCoordinate(); })
           .attr('cy', function(d) { return d.randomCoordinate(); })
           .attr('r', function(d) { return d.radius; })
@@ -137,6 +139,33 @@ var addPlayersToBoard = function(playerArray) {
 };
 
 
+/* COLLISION CODE
+var collision = function(thisCircle, otherCircle) {
+  console.log('Collision at: ' + thisCircle.attr('cx') + ',' + thisCircle.attr('cy'));
+};
+
+var collisionDetection = function() {  
+  return function() {
+    var enemyCircle = d3.select(this);
+
+    d3.select('.player').each(function() {
+      var playerCircle = d3.select(this);
+
+      if (enemyCircle.datum() !== playerCircle.datum()) {
+
+        dx = enemyCircle.attr('cx') - playerCircle.attr('cx'),
+          dy = enemyCircle.attr('cy') - playerCircle.attr('cy'),
+          distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+
+        if (distance < +enemyCircle.attr('r') + +playerCircle.attr('r')) {
+          collision(enemyCircle, playerCircle);
+        }
+      }
+    });
+  };
+};
+
+//COLLISION CODE OVER */
 
 //Add player to board in a random spot
 addPlayersToBoard(playerArray);
