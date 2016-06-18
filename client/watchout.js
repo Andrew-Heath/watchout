@@ -12,8 +12,8 @@ var Circle = function() {
     return (Math.floor(Math.random() * (750 - circle.radius * 2)) + circle.radius);
   };
 
-  // circle.cx = circle.randomCoordinate();
-  // circle.cy = circle.randomCoordinate();  
+  circle.cx = circle.randomCoordinate();
+  circle.cy = circle.randomCoordinate();  
 
   return circle;
 };
@@ -70,7 +70,7 @@ var moveEnemies = function(enemyArray) {
             .duration(1000)
             .attr('cx', function(d) { return d.randomCoordinate(); })
             .attr('cy', function(d) { return d.randomCoordinate(); })
-            .tween('collision', console.log('collided'));
+            .tween('collision', collisionDetection);
 
   // ENTER
   // create new enemies if they don't exist, and assign them random coordinate
@@ -89,6 +89,7 @@ var moveEnemies = function(enemyArray) {
 };
 
 var addPlayersToBoard = function(playerArray) {
+  //UPDATE
   var players = gameBoard.selectAll('.player')
                           .data(playerArray);
 
@@ -102,11 +103,11 @@ var addPlayersToBoard = function(playerArray) {
   var py = 0;
 
   drag.on('drag', function(d, i) {
-    px += d3.event.dx;
-    py += d3.event.dy;
-    d3.select(this).attr('transform', function(d, i) {
-      return 'translate(' + [px, py] + ')';
-    });
+    d.cx += d3.event.dx;
+    d.cy += d3.event.dy;
+    d3.select(this)
+    .attr('cx', function(d) { return d.cx; })
+    .attr('cy', function(d) { return d.cy; });
   });
 
   drag.on('dragstart', function() {
@@ -118,15 +119,13 @@ var addPlayersToBoard = function(playerArray) {
   });
 
   // ENTER
-  // create new enemies if they don't exist, and assign them random coordinate
+  // create new players if they don't exist, and assign them random coordinate
   players.enter().append('circle')
-  
-          .attr('cx', function(d) { return d.randomCoordinate(); })
-          .attr('cy', function(d) { return d.randomCoordinate(); })
+          .attr('cx', function(d) { return d.cx; })
+          .attr('cy', function(d) { return d.cy; })
           .attr('r', function(d) { return d.radius; })
           .classed({'player': true})
           .attr('fill', 'url(#alderaanPattern)')
-          .attr('transform', 'translate(' + px + ',' + py + ')')
           .call(drag);
 
   // players.on('click', function() {
@@ -139,7 +138,8 @@ var addPlayersToBoard = function(playerArray) {
 };
 
 
-/* COLLISION CODE
+// COLLISION CODE
+
 var collision = function(thisCircle, otherCircle) {
   console.log('Collision at: ' + thisCircle.attr('cx') + ',' + thisCircle.attr('cy'));
 };
@@ -165,7 +165,7 @@ var collisionDetection = function() {
   };
 };
 
-//COLLISION CODE OVER */
+//COLLISION CODE OVER
 
 //Add player to board in a random spot
 addPlayersToBoard(playerArray);
