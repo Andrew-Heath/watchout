@@ -1,4 +1,6 @@
 // start slingin' some d3 here.
+var boardSize = 750;
+
 
 //SCOREBOARD CODE
 
@@ -38,7 +40,7 @@ var Circle = function() {
   circle.radius = 25;
 
   circle.randomCoordinate = function () {
-    return (Math.floor(Math.random() * (750 - circle.radius * 2)) + circle.radius);
+    return (Math.floor(Math.random() * (boardSize - circle.radius * 2)) + circle.radius);
   };
 
   circle.cx = circle.randomCoordinate();
@@ -61,8 +63,8 @@ var gameBoard = d3.select('body')
                   .append('svg')
                   .classed({'board': true})
                   .style('background-color', 'black')
-                  .style('height', '750px')
-                  .style('width', '750px');
+                  .style('height', boardSize + 'px')
+                  .style('width', boardSize + 'px');
 
 // Add pattern to gameBoard to house images
 gameBoard.append('defs').append('pattern')
@@ -118,17 +120,6 @@ var moveEnemies = function(enemyArray) {
           .attr('r', function(d) { return d.radius; })
           .attr('fill', 'url(#deathStarPattern)')
           .classed({'enemy': true});
-          // .attr('transform', function(d) {
-          //   return 'rotate(360 ' + d.cx + ' ' + d.cy + ')';
-          // });
-          // .append('animateTransform')
-          // .attr('attributeName', 'transform')
-          // .attr('type', 'rotate')
-          // .attr('from', '0')
-          // .attr('to', '360')
-          // .attr('begin', '0')
-          // .attr('dur', '1s')
-          // .attr('repeatCount', 'indefinite');
 
   // EXIT
   // remove excess enemies
@@ -156,19 +147,19 @@ var addPlayersToBoard = function(playerArray) {
     d3.select(this)
     .attr('cx', function(d) { 
       var coord = d.cx;
-      if (coord < 25) {
-        coord = 25;
-      } else if (coord > 725) {
-        coord = 725;
+      if (coord < d.radius) {
+        coord = d.radius;
+      } else if (coord > boardSize - d.radius) {
+        coord = boardSize - d.radius;
       }
       return coord;
     })
     .attr('cy', function(d) {
       var coord = d.cy;
-      if (coord < 25) {
-        coord = 25;
-      } else if (coord > 725) {
-        coord = 725;
+      if (coord < d.radius) {
+        coord = d.radius;
+      } else if (coord > boardSize - d.radius) {
+        coord = boardSize - d.radius;
       }
       return coord;
     });
