@@ -74,7 +74,16 @@ gameBoard.append('defs').append('pattern')
           .attr('y', 0)
           .attr('width', 50)
           .attr('height', 50)
-          .attr('xlink:href', 'deathstar.png');
+          .attr('xlink:href', 'deathstar.png')
+          // Animation to cause enemy image pattern to rotate
+          .append('animateTransform')
+          .attr('attributeName', 'transform')
+          .attr('type', 'rotate')
+          .attr('from', '0 25 25')
+          .attr('to', '360 25 25')
+          .attr('begin', '0')
+          .attr('dur', '1s')
+          .attr('repeatCount', 'indefinite');
 
 gameBoard.append('defs').append('pattern')
           .attr('id', 'alderaanPattern')
@@ -109,7 +118,17 @@ var moveEnemies = function(enemyArray) {
           .attr('r', function(d) { return d.radius; })
           .attr('fill', 'url(#deathStarPattern)')
           .classed({'enemy': true});
-          // .style('fill', 'white');
+          // .attr('transform', function(d) {
+          //   return 'rotate(360 ' + d.cx + ' ' + d.cy + ')';
+          // });
+          // .append('animateTransform')
+          // .attr('attributeName', 'transform')
+          // .attr('type', 'rotate')
+          // .attr('from', '0')
+          // .attr('to', '360')
+          // .attr('begin', '0')
+          // .attr('dur', '1s')
+          // .attr('repeatCount', 'indefinite');
 
   // EXIT
   // remove excess enemies
